@@ -9,7 +9,7 @@ const scrypt = promisify(_scrypt);
 export class AuthService {
     constructor(private usersService: UsersService) { }
 
-    async signup(email: string, password: string) {
+    async signup(email: string, password: string, name: string) {
         const users = await this.usersService.find(email);
 
         if (users.length) {
@@ -19,6 +19,10 @@ export class AuthService {
         const salt = randomBytes(8).toString('hex');
         const hash = (await scrypt(password, salt, 32)) as Buffer;
         const result = salt + '.' + hash.toString('hex');
+
+        const user = await this.usersService.create(email, result, name);
+
+        return user;
     }
 
     signin() { }
