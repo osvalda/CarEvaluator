@@ -4,7 +4,6 @@ import { UsersService } from './users.service';
 import { User } from './users.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
-
 describe('AuthService', () => {
     let service: AuthService;
     let fakeUsersService: Partial<UsersService>;
@@ -51,8 +50,8 @@ describe('AuthService', () => {
     });
 
     it('throws an error if user signs up with email that is in use', async () => {
-        await service.signup('asdf@asdf.com', 'asdf');
-        await expect(service.signup('asdf@asdf.com', 'asdf')).rejects.toThrow(
+        await service.signup('asdf@asdf.com', 'asdf', 'John Doe');
+        await expect(service.signup('asdf@asdf.com', 'asdf', 'Jane Doe')).rejects.toThrow(
             BadRequestException,
         );
     });
@@ -64,7 +63,7 @@ describe('AuthService', () => {
     });
 
     it('throws if an invalid password is provided', async () => {
-        await service.signup('laskdjf@alskdfj.com', 'origipsw');
+        await service.signup('laskdjf@alskdfj.com', 'origipsw', 'John Doe');
         await expect(service.signin('laskdjf@alskdfj.com', 'fakepsw'),
         ).rejects.toThrow(BadRequestException);
     });
